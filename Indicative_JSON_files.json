@@ -18,7 +18,7 @@
 # Endpoint 8-9 | Indicative JSON file...
 {
     "email":"tonyasweeney@ontagene.com"
-    "courses": [{"course_1": 9, "course_2": 4, "course_3": 7, "course_4": 5, "course_5": 1}]
+    "courses":[{"course_1": 9, "course_2": 4, "course_3": 7, "course_4": 5, "course_5": 1}]
 }
 
 // Endpoints 4 and 5 need no JSON file to run...
