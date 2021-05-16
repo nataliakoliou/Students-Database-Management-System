@@ -260,7 +260,7 @@ def get_courses():
             if "courses" in student:
                 for course_d in student["courses"]:
                     course_l = next(iter((course_d.items())))
-                    if course_l[1] > 5:
+                    if course_l[1] >= 5:
                         passed.update(course_d)
                     else:
                         continue
