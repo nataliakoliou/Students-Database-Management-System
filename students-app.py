@@ -31,7 +31,7 @@ def create_session(username):
 def is_session_valid(user_uuid):
     return user_uuid in users_sessions
 
-# ΕΡΩΤΗΜΑ 1: Δημιουργία χρήστη
+# TASK-1: User creation
 @app.route('/createUser', methods=['POST'])
 def create_user():
     # Request JSON data
@@ -55,7 +55,7 @@ def create_user():
     else:   
         return Response("A user with the given username already exists",status=400,mimetype='application/json')
 
-# ΕΡΩΤΗΜΑ 2: Login στο σύστημα
+# TASK-2: System login
 @app.route('/login', methods=['POST'])
 def login():
     # Request JSON data
@@ -78,7 +78,7 @@ def login():
     else:    
         return Response("Wrong username or password",status=400,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 3: Επιστροφή φοιτητή βάσει email 
+# TASK-3: Get student by email
 @app.route('/getStudent', methods=['GET'])
 def get_student_1():
     # Request JSON data
@@ -106,7 +106,7 @@ def get_student_1():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
         
-# ΕΡΩΤΗΜΑ 4: Επιστροφή όλων των φοιτητών που είναι 30 ετών
+# TASK-4: Get all students who are exactly 30 years old
 @app.route('/getStudents/thirties', methods=['GET'])
 def get_students_thirty_1():
 
@@ -128,7 +128,7 @@ def get_students_thirty_1():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 5: Επιστροφή όλων των φοιτητών που είναι τουλάχιστον 30 ετών
+# TASK-5: Get all students who are at least 30 years old
 @app.route('/getStudents/oldies', methods=['GET'])
 def get_students_thirty_2():
 
@@ -150,7 +150,7 @@ def get_students_thirty_2():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 6: Επιστροφή φοιτητή που έχει δηλώσει κατοικία βάσει email 
+# TASK-6: Get students who have declared residence based on email
 @app.route('/getStudentAddress', methods=['GET'])
 def get_student_2():
     # Request JSON data
@@ -179,7 +179,7 @@ def get_student_2():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 7: Διαγραφή φοιτητή βάσει email 
+# TASK-7: Delete student by email
 @app.route('/deleteStudent', methods=['DELETE'])
 def delete_student():
     # Request JSON data
@@ -204,7 +204,7 @@ def delete_student():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 8: Εισαγωγή μαθημάτων σε φοιτητή βάσει email 
+# TASK-8: Add courses to student based on email
 @app.route('/addCourses', methods=['PATCH'])
 def add_courses():
     # Request JSON data
@@ -237,7 +237,7 @@ def add_courses():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
 
-# ΕΡΩΤΗΜΑ 9: Επιστροφή περασμένων μαθημάτων φοιτητή βάσει email
+# TASK-9: Get passed courses of student based on email
 @app.route('/getPassedCourses', methods=['GET'])
 def get_courses():
     # Request JSON data
@@ -276,6 +276,6 @@ def get_courses():
     else:
         return Response("Invalid user unique identifier",status=401,mimetype="application/json")
     
-# Εκτέλεση flask service σε debug mode, στην port 5000. 
+# Execute flask service in debug mode on port 5000
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
