@@ -1,9 +1,33 @@
-# Τεχνική Αναφορά | Περιγραφή Εκτέλεσης Κώδικα
-Τμήμα Ψηφιακών Συστημάτων | Πληροφοριακά Συστήματα : Ναταλία Κολιού, Ε18073
+# Students Database Management System
+This project aims to build a Students Database Management System, which provides various endpoints for managing student data effectively. The system is implemented using Python with Flask for the backend and MongoDB as the database. 
 
-> # Εισαγωγή
-> Στην τρέχουσα τεχνική αναφορά, θα περιγράψουμε αναλυτικά τα στάδιο εκτέλεσης του αρχείου app.py. Για τον σκοπό αυτό, θα χρησιμοποιήσουμε τον τερματικό του Linux και την εφαρμογή Postman. Με την εκκίνηση της εικονικής μας μηχανής, θα εκτελέσουμε στον terminal τις ακόλουθες δύο εντολές για να ενεργοποιήσουμε το docker και την βάση mongodb: sudo systemctl enable docker --now και sudo docker start mongodb. Στη συνέχεια, θα γράψουμε την εντολή python3 app.py για να ενεργοποιήσουμε τον debugger και να εκτελέσουμε το python αρχείο μας στον http://0.0.0.0:5000/. Προτείνεται η κατασκευή και των 9 JSON αρχείων που θα εισάγετε στο Postman προς δική σας διευκόλυνση ...
-> 
+## Introduction
+In this report, we will provide a detailed walkthrough of the steps involved in running the `students-app.py` file. To accomplish this, we will use the Linux terminal and the Postman application. Our process will begin with the setup of a virtual machine, followed by the activation of Docker and the MongoDB database using the following commands:
+
+```bash
+sudo systemctl enable docker --now
+sudo docker start mongodb
+```
+We will then execute the Python file, students-app.py, along with a debugger, accessible at http://0.0.0.0:5000/. For your convenience, we recommend creating nine JSON files that can be imported into Postman. You can find a list of these JSON files in the [json-endpoints.txt](https://github.com/nataliakoliou/Students-Database-Management-System/blob/main/json-endpoints.txt) file in this repository. Copy and paste the endpoints from the file to quickly set up your requests in Postman.
+
+## Implementation of the 1st Endpoint | User Creation
+To create a user using Postman:
+
+1. Open Postman and select the POST request method.
+2. Enter the following URL: [http://0.0.0.0:5000/createUser](http://0.0.0.0:5000/createUser).
+3. In the request Body, choose the "raw" option to specify that you are importing a JSON file.
+4. Select "binary" and click "Select File" to upload the `endpoint1.json` file to the system.
+5. Once the file is successfully loaded, click "Send" to get the response.
+
+**Code Explanation:**
+
+The system checks if there are any existing users in the Users collection using the `count_documents()` function. If it returns 0, the username and password entered in the data using `data = json.loads(request.data)` are stored in the user dictionary. This user dictionary is then added to the Users collection, and a success message is sent to the user. If the username and password you're trying to add already exist in the Users collection, you'll receive a corresponding failure message.
+
+
+
+
+
+
 >  ... ανατρέξτε στο αρχείο Indicative_JSON_files.txt της εργασίας στο GitHub.
 > # Υλοποίηση του 1ου Endpoint | Δημιουργία Χρήστη
 > Στο πεδίο HTTP Request του Postman, επιλέγουμε την POST request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/createUser. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint1.json αρχείο μας στο σύστημα. Όταν φορτωθεί επιτυχώς, πατάμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
