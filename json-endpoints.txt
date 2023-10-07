@@ -1,0 +1,40 @@
+# ENDPOINT-1
+{
+    "username":"eloise99",
+    "password":"eloiseM@rtin#4299"
+}
+
+# ENDPOINT-2
+{
+    "username":"eloise99",
+    "password":"eloiseM@rtin#4299"
+}
+
+# ENDPOINT-3
+{
+    "email":"hamptonbarnett@ontagene.com"
+}
+
+# ENDPOINT-6
+{
+    "email":"jancooper@ontagene.com"
+}
+
+# ENDPOINT-7
+{
+    "email":"yvettewhitfield@ontagene.com"
+}
+
+# ENDPOINT-8
+{
+    "email":"tonyasweeney@ontagene.com"
+    "courses":[{"course_1": 9, "course_2": 4, "course_3": 7, "course_4": 5, "course_5": 1}]
+}
+
+# ENDPOINT-9
+{
+    "email":"tonyasweeney@ontagene.com"
+    "courses":[{"course_1": 9, "course_2": 4, "course_3": 7, "course_4": 5, "course_5": 1}]
+}
+
+// ENDPOINTS 4 AND 5 NEED NO JSON FILE TO RUN
