@@ -2,13 +2,24 @@
 This project aims to build a Students Database Management System, which provides various endpoints for managing student data effectively. The system is implemented using Python with Flask for the backend and MongoDB as the database. 
 
 ## Introduction
-In this report, we will provide a detailed walkthrough of the steps involved in running the `students-app.py` file. To accomplish this, we will use the Linux terminal and the Postman application. Our process will begin with the setup of a virtual machine, followed by the activation of Docker and the MongoDB database using the following commands:
+In this report, we will provide a detailed walkthrough of the steps involved in running the `students-app.py` file. To accomplish this, we will use the Linux terminal and the Postman application.
 
-```bash
-sudo systemctl enable docker --now
-sudo docker start mongodb
-```
-We will then execute the Python file, students-app.py, along with a debugger, accessible at http://0.0.0.0:5000/. For your convenience, we recommend creating nine JSON files that can be imported into Postman. You can find a list of these JSON files in the [json-endpoints.txt](https://github.com/nataliakoliou/Students-Database-Management-System/blob/main/json-endpoints.txt) file in this repository. Copy and paste the endpoints from the file to quickly set up your requests in Postman.
+We will execute the Python file, students-app.py, along with a debugger, accessible at http://0.0.0.0:5000/. For your convenience, we recommend creating nine JSON files that can be imported into Postman. You can find a list of these JSON files in the [json-endpoints.txt](https://github.com/nataliakoliou/Students-Database-Management-System/blob/main/json-endpoints.txt) file in this repository. Copy and paste the endpoints from the file to quickly set up your requests in Postman.
+
+## Requirements
+To run this project, you need to ensure the following requirements are met:
+- **Python:** The project is implemented using Python. You will need Python 3.8 or a higher version installed on your system. You can download Python from [Python's official website](https://www.python.org/downloads/).
+- **Flask:** Flask is used as the web framework for the backend of the project. You can install Flask using pip:
+  ```bash
+  pip install Flask
+  ```
+- MongoDB: MongoDB is used as the database for the project. You can install MongoDB on your system by following the instructions provided on the MongoDB installation page.
+- Docker (Optional): Docker is used to run MongoDB as a container. If you prefer to use Docker, make sure it's installed on your system, and you can start MongoDB as a Docker container using:
+  ```bash
+  sudo systemctl enable docker --now
+  sudo docker start mongodb
+  ```
+- Postman: Postman is recommended for testing the API endpoints. You can download and install Postman from Postman's official website.
 
 ## 1st Endpoint | User creation
 1. Open Postman and select the POST request method.
@@ -90,13 +101,28 @@ The system first checks if the UUID in the Authorization field exists in the use
 **Code Explanation:**
 The system first checks the validity of your UUID in the Authorization field by calling the is_session_valid() function. If it's valid, the system proceeds to check if there is a user in the Students collection with the email provided in Postman. If such a user is found, they are completely removed from the Students collection using the students.delete_one({"email": data["email"]}) command. If the UUID is invalid, the email doesn't correspond to a student, or the email exists in the Students collection but belongs to a student who hasn't provided an address, an error message is returned.
 
+## 8th Endpoint | Add courses to student based on email
+1. Open Postman and select the PATCH request method.
+2. Enter the following URL: [http://0.0.0.0:5000/addCourses](http://0.0.0.0:5000/addCourses).
+3. In the main section (Body), choose the "raw" option to specify that you're uploading a JSON file.
+4. Click on "binary" and select "Select File" to upload the "endpoint8.json" file.
+5. In the Headers section, add a new header named "Authorization."
+6. After successfully logging in as a user, copy the UUID (user unique identifier) and paste it into the Authorization field.
+7. Click the "Send" button to initiate the request and receive the response.
 
+**Code Explanation:**
+The system validates the UUID in the Authorization field by calling the is_session_valid() function. If it's valid, the system checks if a user with the provided email exists in the Students collection through Postman. If such a user is found, the system inserts the courses field with the courses received from json.loads(request.data). To print these courses distinctly, they are stored one by one in a list called "courses_l." This list is then used to update the "student" variable with the command `student.update({"courses": courses_l})" in dictionary format, just like they appear in the JSON file. This allows the system to print the student's information with the current email after inserting it into the "student_d5" dictionary. Since the Students.json file contains users with and without address details, the "student_d5" dictionary has two forms – one including the "address" field and one excluding it. If the UUID is invalid or the email doesn't correspond to any student, an error message is returned.
 
-> # Υλοποίηση του 8ου Endpoint | Εισαγωγή μαθημάτων σε φοιτητή βάσει email
-> Στο πεδίο HTTP Request του Postman, επιλέγουμε την PATCH request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/addCourses. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint8.json αρχείο μας στο σύστημα. Έπειτα πηγαίνουμε στο πεδίο Headers και εισάγουμε έναν νέο header με το όνομα Authorization και κάνουμε κλικ στο τετράγωνο πλαίσιο στα αριστερά. Έχοντας κάνει επιτυχώς το login ως χρήστες, λαμβάνουμε (copy) το αναγνωριστικό uuid και το βάζουμε στο πλαίσιο του Authorization. Τώρα είμαστε έτοιμοι να πατήσουμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
-> 
-> Ερμηνεία του Κώδικα: Το σύστημα εξετάζει αν το uuid στο πεδίο Authorization υπάρχει στην users_session, καλώντας την συνάρτηση is_session_valid(). Αν λάβει θετική απάντηση, ελέγχει αν υπάρχει χρήστης στην συλλογή Students με το email που έλαβε μέσω Postman. Αν πράγματι βρεθεί ένας τέτοιος χρήστης, τότε εισάγεται στα στοιχεία του το πεδίο courses με τα μαθήματα που λαμβάνει το σύστημα μέσω της εντολής json.loads(request.data). Σκοπός μας είναι να εκτυπωθούν με τρόπο ευδιάκριτο, γι' αυτό και τα αποθηκεύουμε ένα ένα μέσα σε μια λίστα που ονομάζουμε courses_l. Τα δεδομένα αυτής της λίστας περνάνε έπειτα στην μεταβλητή student με την εντολή student.update({"courses":courses_l}) σε μορφή dictionary (ακριβώς όπως υπάρχουν στο JSON αρχείο). Έτσι το σύστημα εκτυπώνει τα στοιχεία του μαθητή με το τρέχον email, αφού πρώτα τα εισάγει στο λεξικό student_d5. Επειδή το Students.json αρχείο μας περιέχει χρήστες που έχουν δηλώσει τα στοιχεία κατοικίας τους, αλλά και χρήστες που έχουν κενό αυτό το πεδίο, πρέπει το λεξικό student_d5 να λαμβάνει δύο μορφές: η πρώτη θα περιλαμβάνει το πεδίο address ενώ η δεύτερη δε θα το περιλαμβάνει. Σε περίπτωση που το uuid είναι μη έγκυρο, ή το email δεν αντιστοιχεί σε κάποιον μαθητή, επιστρέφεται μήνυμα λάθους.
-> # Υλοποίηση του 9ου Endpoint | Επιστροφή περασμένων μαθημάτων φοιτητή βάσει email
-> Στο πεδίο HTTP Request του Postman, επιλέγουμε την GET request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/getPassedCourses. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint9.json αρχείο μας στο σύστημα. Έπειτα πηγαίνουμε στο πεδίο Headers και εισάγουμε έναν νέο header με το όνομα Authorization και κάνουμε κλικ στο τετράγωνο πλαίσιο στα αριστερά. Έχοντας κάνει επιτυχώς το login ως χρήστες, λαμβάνουμε (copy) το αναγνωριστικό uuid και το βάζουμε στο πλαίσιο του Authorization. Τώρα είμαστε έτοιμοι να πατήσουμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
-> 
-> Ερμηνεία του Κώδικα: Το σύστημα εξετάζει αν το uuid στο πεδίο Authorization υπάρχει στην users_session, καλώντας την συνάρτηση is_session_valid(). Αν λάβει θετική απάντηση, ελέγχει αν υπάρχει χρήστης στην συλλογή Students με το email που έλαβε μέσω Postman, που να έχει συμπληρωμένο το πεδίο courses στην συλλογή Students. Αν πράγματι βρεθεί ένας τέτοιος χρήστης, τότε εξάγονται ως λεξικό τα μαθήματα στα οποία εξετάστηκε και αξιολογήθηκε με προβιβάσιμο βαθμό (βαθμός μεγαλύτερος ή και ίσως του 5). Το λεξικό αυτό ονομάζεται passed και δημιουργείται μέσω της εντολής passed.update(course_d) | το course_d το κάθε ζεύγος course-grade που θέλουμε να εισαχθεί στο λεξικό. Στο τέλος, το σύστημα εκτυπώνει το όνομα του μαθητή και τα μαθήματα που έχει περάσει, μέσω ενός λεξικού που ονομάζουμε student_d6. Σε περίπτωση που το uuid είναι μη έγκυρο, ή το email δεν αντιστοιχεί σε κάποιον μαθητή, ή ο μαθητής δεν έχει εξεταστεί σε κανένα μάθημα επιστρέφεται μήνυμα λάθους. Αντίστοιχα αν ο μαθητής εξετάστηκε αλλά κόπηκε σε όλα τα μαθήματα, εμφανίζεται το ανάλογο ενημερωτικό μήνυμα.
+## 9th Endpoint | Get a Student's Previous Courses by Email
+1. Open Postman and choose the GET request method.
+2. Enter this URL: http://0.0.0.0:5000/getPassedCourses.
+3. In the main section (Body), select "raw" to specify that we'll input JSON data.
+4. Click "binary" and choose "Select File" to upload the endpoint9.json file from your system.
+5. In the Headers section, add a new header named "Authorization," then paste your UUID (user unique identifier) into the Authorization field after successfully logging in.
+6. Click "Send" to initiate the request and receive the response.
+
+**Code Explanation:**
+The system first checks if the UUID in the Authorization field exists in the users_session by using the is_session_valid() function. If it's valid, the system looks for a user in the Students collection with the email provided via Postman. It checks if this user has completed any courses in the Students collection. If such a user is found, the system extracts the courses in which they were examined and received a passing grade (a grade greater than or possibly equal to 5) and stores them in a dictionary called "passed." This dictionary is constructed using the "passed.update(course_d)" command, where "course_d" represents each course-grade pair included in the dictionary. Finally, the system prints the student's name and the courses they have passed using a dictionary named "student_d6." If the UUID is invalid, the email doesn't correspond to any student, or the student hasn't been examined in any course, an error message is returned. Likewise, if the student was examined but failed in all courses, an appropriate informative message is displayed.
+
+## Author
+Natalia Koliou: find me on [LinkedIn](https://www.linkedin.com/in/natalia-koliou-b37b01197/).
