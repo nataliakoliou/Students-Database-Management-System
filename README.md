@@ -10,37 +10,50 @@ sudo docker start mongodb
 ```
 We will then execute the Python file, students-app.py, along with a debugger, accessible at http://0.0.0.0:5000/. For your convenience, we recommend creating nine JSON files that can be imported into Postman. You can find a list of these JSON files in the [json-endpoints.txt](https://github.com/nataliakoliou/Students-Database-Management-System/blob/main/json-endpoints.txt) file in this repository. Copy and paste the endpoints from the file to quickly set up your requests in Postman.
 
-## Implementation of the 1st Endpoint | User Creation
-To create a user using Postman:
-
+## 1st Endpoint | User Creation
 1. Open Postman and select the POST request method.
 2. Enter the following URL: [http://0.0.0.0:5000/createUser](http://0.0.0.0:5000/createUser).
 3. In the request Body, choose the "raw" option to specify that you are importing a JSON file.
 4. Select "binary" and click "Select File" to upload the `endpoint1.json` file to the system.
-5. Once the file is successfully loaded, click "Send" to get the response.
+5. Once the file is uploaded, click "Send" to get the response.
 
 **Code Explanation:**
-
 The system checks if there are any existing users in the Users collection using the `count_documents()` function. If it returns 0, the username and password entered in the data using `data = json.loads(request.data)` are stored in the user dictionary. This user dictionary is then added to the Users collection, and a success message is sent to the user. If the username and password you're trying to add already exist in the Users collection, you'll receive a corresponding failure message.
 
+## 2nd Endpoint | System Login
+1. Open Postman and select the POST request method.
+2. Enter the following URL: [http://0.0.0.0:5000/createUser](http://0.0.0.0:5000/login).
+3. In the request Body, choose the "raw" option to specify that you are importing a JSON file.
+4. Select "binary" and click "Select File" to upload the `endpoint2.json` file to the system.
+5. Once the file is uploaded, click "Send" to get the response.
+
+**Code Explanation:**
+The system checks if there are users in the Users collection with the username and password you provided in the Postman request Body. If it finds a matching user, it triggers the `create_session()` function to authenticate the user. You'll receive a dictionary containing the user's unique identifier (UUID) and username. If the requested user isn't found, you'll get an error message.
+
+## 3rd Endpoint | Retrieve Student by Email
+
+1. Open Postman and select the HTTP GET request method.
+2. Enter the following URL: [http://0.0.0.0:5000/getStudent](http://0.0.0.0:5000/getStudent).
+3. In the request body section, choose the "raw" option to specify that you're sending JSON data.
+4. Select the "binary" option and click "Select File" to upload the `endpoint3.json` file to the system.
+5. In the Headers section, add a new header named "Authorization."
+6. After successfully logging in as a user, copy the UUID (user unique identifier) and paste it into the Authorization field.
+7. Click the "Send" button to initiate the request and receive the response.
+
+**Code Explanation:**
+The system checks if the UUID in the Authorization field exists in the `users_sessions` by calling the `is_session_valid()` function. If it gets a positive response, it proceeds to check if there's a user in the Students collection with the email provided through Postman. If such a user is found, their details are returned through the `student_d1` dictionary. Since the `Students.json` file may contain users who have declared their home address and those who haven't, the `student_d1` dictionary can take two forms: one including the "address" field and one without it. In case the UUID is invalid or the email doesn't correspond to a student, an error message is returned.
 
 
 
 
 
->  ... ανατρέξτε στο αρχείο Indicative_JSON_files.txt της εργασίας στο GitHub.
-> # Υλοποίηση του 1ου Endpoint | Δημιουργία Χρήστη
-> Στο πεδίο HTTP Request του Postman, επιλέγουμε την POST request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/createUser. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint1.json αρχείο μας στο σύστημα. Όταν φορτωθεί επιτυχώς, πατάμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
->
-> Ερμηνεία του Κώδικα: το σύστημα ελέγχει αν υπάρχουν ήδη χρήστες στην συλλογή των Users αξιοποιώντας την συνάρτηση count_documents(). Αν αυτή επιστρέψει 0, τότε αποθηκεύεται στο λεξικό user το username και το password που εισάγεται στο data μέσω της εντολής data = json.loads(request.data). Το λεξικό αυτό user μπαίνει στην συλλογή Users και εν τέλει αποστέλλεται μήνυμα επιτυχίας στον χρήστη. Ειδάλλως αν το username και το password που θέλουμε να εισάγουμε, υπάρχει ήδη στην συλλογή Users, επιστρέφεται το ανάλογο μήνυμα αποτυχίας.
-> # Υλοποίηση του 2ου Endpoint | Login στο σύστημα
-> Στο πεδίο HTTP Request του Postman, επιλέγουμε την POST request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/login. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint2.json αρχείο μας στο σύστημα. Όταν φορτωθεί επιτυχώς, πατάμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
-> 
-> Ερμηνεία του Κώδικα: το σύστημα ελέγχει αν υπάρχουν χρήστες στην συλλογή των Users με το username και password που εισάγουμε στο Body του Postman. Αν βρεθεί ένας τέτοιος χρήστης τότε καλείται η συνάρτηση create_session() προκειμένου να αυθεντικοποιηθεί ο χρήστης. Έτσι επιστρέφεται στον χρήστη ένα λεξικό με keys το user unique identifier (uuid) και το username του χρήστη. Σε περίπτωση που δεν βρεθεί ο ζητούμενος χρήστης επιστρέφεται το ανάλογο μήνυμα αποτυχίας.
 > # Υλοποίηση του 3ου Endpoint | Επιστροφή φοιτητή βάσει email
 > Στο πεδίο HTTP Request του Postman, επιλέγουμε την GET request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/getStudent. Στο κυρίως μέρος (Body) επιλέγουμε το πεδίο raw για να δηλώσουμε ότι ο τύπος αρχείου που θα εισάγουμε θα είναι JSON. Έπειτα πατάμε binary και στη συνέχεια Select File. Εκεί καλούμαστε να εισάγουμε το endpoint3.json αρχείο μας στο σύστημα. Έπειτα πηγαίνουμε στο πεδίο Headers και εισάγουμε έναν νέο header με το όνομα Authorization και κάνουμε κλικ στο τετράγωνο πλαίσιο στα αριστερά. Έχοντας κάνει επιτυχώς το login ως χρήστες, λαμβάνουμε (copy) το αναγνωριστικό uuid και το βάζουμε στο πλαίσιο του Authorization. Τώρα είμαστε έτοιμοι να πατήσουμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
 > 
 > Ερμηνεία του Κώδικα: Το σύστημα εξετάζει αν το uuid στο πεδίο Authorization υπάρχει στην users_session, καλώντας την συνάρτηση is_session_valid(). Αν λάβει θετική απάντηση, ελέγχει αν υπάρχει χρήστης στην συλλογή Students με το email που έλαβε μέσω Postman. Αν πράγματι βρεθεί ένας τέτοιος χρήστης, τότε επιστρέφονται τα στοιχεία του μέσω του λεξικού student_d1. Επειδή το Students.json αρχείο μας περιέχει χρήστες που έχουν δηλώσει τα στοιχεία κατοικίας τους, αλλά και χρήστες που έχουν κενό αυτό το πεδίο, πρέπει το λεξικό student_d1 να λαμβάνει δύο μορφές: η πρώτη θα περιλαμβάνει το πεδίο address ενώ η δεύτερη δε θα το περιλαμβάνει. Σε περίπτωση που το uuid είναι μη έγκυρο, ή το email δεν αντιστοιχεί σε κάποιον μαθητή, επιστρέφεται μήνυμα λάθους.
+
+
+
 > # Υλοποίηση του 4ου Endpoint | Επιστροφή όλων των φοιτητών που είναι 30 ετών
 > Στο πεδίο HTTP Request του Postman, επιλέγουμε την GET request μέθοδο και στο πεδίο Request URL βάζουμε την διεύθυνση: http://0.0.0.0:5000/getStudents/thirties. Έπειτα πηγαίνουμε στο πεδίο Headers και εισάγουμε έναν νέο header με το όνομα Authorization και κάνουμε κλικ στο τετράγωνο πλαίσιο στα αριστερά. Έχοντας κάνει επιτυχώς το login ως χρήστες, λαμβάνουμε (copy) το αναγνωριστικό uuid και το βάζουμε στο πλαίσιο του Authorization. Προσοχή: δεν εισάγουμε τίποτα στο πεδίο Body. Τώρα είμαστε έτοιμοι να πατήσουμε Send για να μας εκτυπωθεί η ζητούμενη απάντηση.
 > 
